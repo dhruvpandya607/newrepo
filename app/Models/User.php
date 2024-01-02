@@ -25,7 +25,7 @@ class User extends Authenticatable
 
     public function label()
     {
-        return $this->hasMany(Label::class);
+        return $this->hasMany(Label::class, 'user_id');
     }
 
     /**

@@ -14,6 +14,6 @@ test('task belongs to todo list', function () {
 
     $todolist = TodoList::factory()->create();
     $task = Task::factory()->create(['todo_list_id' => $todolist->id]);
-    // dd($task);
-    $this->assertInstanceOf(TodoList::class, $todolist);
+    
+    $this->assertInstanceOf(TodoList::class, $task->todolist);
 });

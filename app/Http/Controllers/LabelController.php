@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LabelValidateRequest;
 use App\Models\Label;
-use Illuminate\Http\Request;
+use App\Http\Resources\LabelResource;
+use App\Http\Requests\LabelValidateRequest;
 
 class LabelController extends Controller
 {
 
     public function index()
     {
-        $labels = Label::all();
-        return $labels;
+        $labels = auth()->user()->label;
+        return LabelResource::collection($labels);
     }
 
     public function create()
@@ -22,13 +22,14 @@ class LabelController extends Controller
 
     public function store(LabelValidateRequest $request)
     {
-        return Label::create($request->all());
+        $Label = Label::create($request->validated());
+        return new LabelResource($Label);
     }
 
     public function update(LabelValidateRequest $request, Label $label)
     {
-        $Label = Label::where('id', $label->id)->update($request->all());
-        return $Label;
+        $label->update($request->validated());
+        return new LabelResource($label);
     }
 
     public function destroy(Label $label)

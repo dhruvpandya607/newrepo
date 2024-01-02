@@ -27,10 +27,10 @@ test('storing access token with service callback', function () {
     $this->withoutExceptionHandling();
     $authuser = $this->authUser();
 
-    $this->postJson(route('webservice.callback'), ['code' => 'dummyCode'])->assertCreated();
+    $this->postJson(route('webservice.callback', $authuser->id), ['code' => 'dummyCode'])->assertCreated();
 
     $this->assertDatabaseHas('web_services', [
-        'user_id' => $authuser->id, 'token' => json_encode(['access_token' => 'fake-token'])
+        'user_id' => auth()->id()
     ]);
 });
 

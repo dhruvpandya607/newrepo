@@ -24,19 +24,19 @@ abstract class TestCase extends BaseTestCase
         return User::factory()->create();
     }
 
-    function createTodolist($argv)
+    function createTodolist($args = [])
     {
-        return TodoList::factory()->create($argv);
+        return TodoList::factory()->create($args);
     }
 
-    function createLabel($argv)
+    function createLabel($args = [])
     {
-        return Label::factory()->create($argv);
+        return Label::factory()->create($args);
     }
 
-    function createTask($argv)
+    function createTask($args = [])
     {
-        return Task::factory()->create($argv);
+        return Task::factory()->create($args);
     }
 
     function createWebService()

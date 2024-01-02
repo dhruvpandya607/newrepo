@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
 use Google\Client;
 use App\Models\Task;
-use Google\Service\Drive;
+use App\Services\Zipper;
 use App\Models\WebService;
 use Illuminate\Http\Request;
-use Google\Service\Drive\DriveFile;
+use App\Services\GoogleDrive;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,9 +18,10 @@ class WebServiceController extends Controller
         'https://www.googleapis.com/auth/drive.file',
     ];
 
-    public function connect(Request $request, Client $client)
+    public function connect($webservice, Client $client)
     {
-        if ($request->webservice === 'todolists') {
+
+        if ($webservice === 'todolists') {
 
             $client->setScopes(self::TODOLISTS_SCOPES);
             $uri = $client->createAuthUrl();
@@ -39,39 +39,17 @@ class WebServiceController extends Controller
         return $service;
     }
 
-    public function store(Request $request, WebService $webservice, Client $client)
+    public function store(WebService $webservice, GoogleDrive $drive)
     {
-        // need to fetch last 7 days data
-        $tasks = Task::where('created_at', '>=', now()->subDays(7))->get()->toJson();
+        $tasks = Task::where('created_at', '>=', now()->subDays(7))->get()->toJson();   // fetching last 7 days data
 
-        // creating json file with this data with path
-        Storage::put('public/tasks.json', $tasks);
+        $jsonFileName = "tasks.json";                                                   // creating json file with path
+        Storage::disk('local')->put("public/$jsonFileName", $tasks);
 
-        // creating zip file with this json file
-        $zip = new ZipArchive();
-        $zip_file_name = storage_path('app/public/' . 'tasks.zip');
-        $zip->open($zip_file_name, ZipArchive::CREATE);
-        $zip_file_path = storage_path('app/public/' . 'tasks.json');
-        $zip->addFile($zip_file_path);
-        $zip->close();
+        $zip_file_name = Zipper::createZipFile($jsonFileName);                          // creating zip of this json file
 
-        // sending zip file to drive
-        $access_token = $webservice->token;
-        // dd($access_token);
-        $client->setAccessToken($access_token);
-
-        $service = new Drive($client);
-        $file = new DriveFile();
-
-        $file->setName("First File!");
-        $service->files->create(
-            $file,
-            [
-                'data' => file_get_contents($zip_file_name),
-                'mimeType' => 'application/octet-stream',
-                'uploadType' => 'multipart'
-            ]
-        );
+        $access_token = $webservice->token;                                             // sending zip file to drive
+        $drive->uploadFile($zip_file_name, $access_token);
 
         return response('File Uploaded', Response::HTTP_CREATED);
     }

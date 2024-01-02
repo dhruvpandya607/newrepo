@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskValidateRequest;
 use App\Models\Task;
+use App\Models\TodoList;
+use App\Http\Resources\TaskResource;
+use App\Http\Requests\TaskValidateRequest;
 
 
 class TaskController extends Controller
 {
 
-    public function index()
+    public function index(TodoList $todolist)
     {
-        $tasks = Task::all();
-        return $tasks;
+        $tasks = $todolist->task;
+        return TaskResource::collection($tasks);
     }
 
     public function create()
@@ -20,16 +22,16 @@ class TaskController extends Controller
         return view('task.create');
     }
 
-    public function store(TaskValidateRequest $request)
+    public function store(TaskValidateRequest $request, TodoList $todolist)
     {
-        $task = Task::create($request->all());
-        return $task;
+        $task = $todolist->task()->create($request->validated());
+        return new TaskResource($task);
     }
 
     public function update(TaskValidateRequest $request, Task $task)
     {
-        $Task = Task::where('id', $task->id)->update($request->all());
-        return $Task;
+        $task->update($request->validated());
+        return new TaskResource($task);
     }
 
     public function destroy(Task $task)

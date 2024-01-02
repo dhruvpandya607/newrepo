@@ -3,10 +3,6 @@
 namespace App\Providers;
 
 use Google\Client;
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +10,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
         $this->app->singleton(Client::class, function () {
 
@@ -23,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
             $client->setClientId($config['id']);
             $client->setClientSecret($config['secret']);
-            $client->setRedirectUri($config['redirect_uri']);
+            $client->setRedirectUri($config['redirect_url']);
 
             return $client;
         });
@@ -34,14 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Model::unguard();
-
-        // Gate::define('admin', function (User $registeruser) {
-        //     return $registeruser->email === 'dhruv@gmail.com';
-        // });
-
-        // Blade::if('admin', function () {
-        //     return request()->user()?->can('admin');
-        // });
+        //
     }
 }

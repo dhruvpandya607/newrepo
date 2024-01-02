@@ -3,69 +3,49 @@
 
 test('fetching all todo lists', function () {
 
+    $this->authUser();
+    $this->createTodolist(['name' => 'first todo list', 'user_id' => auth()->id()]);
     $this->withoutExceptionHandling();
 
-    $this->authUser();
-    $user = $this->createUser();
-    $this->createTodolist(['name' => 'first todo list', 'user_id' => $user->id]);
+    $response = $this->getJson(route('todo-lists.index'))->json('data');
 
-    $response = $this->getJson(route('todo-lists.index'));
-
-    $this->assertEquals(1, count($response->json()));
-});
-
-
-test('create a todo list', function () {
-
-    $this->authUser();
-    $user = $this->createUser();
-    $this->createTodolist(['user_id' => $user->id]);
-
-    $this->getJson(route('todo-lists.create'))->assertOk();
-});
-
-
-test('shows a single todo list', function () {
-
-    $this->withoutExceptionHandling();
-
-    $this->authUser();
-    $user = $this->createUser();
-    $todolist = $this->createTodolist(['user_id' => $user->id]);
-
-    $this->getJson(route('todo-lists.show', $todolist->id));
-
-    $this->assertDatabaseHas('todo_lists', ['name' => $todolist->name]);
+    $this->assertEquals(1, count($response));
 });
 
 
 test('store a todo list with validation', function () {
 
+    $this->authUser();
+    $todolist = $this->createTodolist(['user_id' => auth()->id()]);
     $this->withoutExceptionHandling();
 
+    $storeTodolistData = ['name' => $todolist->name, 'user_id' => $todolist->user_id];
+
+    $this->postJson(route('todo-lists.store'), $storeTodolistData)->json('data');
+
+    $this->assertDatabaseHas('todo_lists', ['name' => $todolist->name, 'user_id' => $todolist->user_id]);
+});
+
+
+test('shows a single todo list', function () {
+
     $this->authUser();
-    $user = $this->createUser();
-    $this->createTodolist(['name' => 'first todo list', 'user_id' => $user->id]);
+    $todolist = $this->createTodolist();
+    $this->withoutExceptionHandling();
 
-    $this->postJson(route('todo-lists.store'), [
-        'name' => 'first todo list', 'user_id' => $user->id,
-    ]);
+    $this->getJson(route('todo-lists.show', $todolist->id))->json('data');
 
-    $this->assertDatabaseHas('todo_lists', ['name' => 'first todo list']);
+    $this->assertDatabaseHas('todo_lists', ['name' => $todolist->name]);
 });
 
 
 test('update a todo list with validation', function () {
 
+    $this->authUser();
+    $todolist = $this->createTodolist(['name' => 'first todo list', 'user_id' => auth()->id()]);
     $this->withoutExceptionHandling();
 
-    $this->authUser();
-    $user = $this->createUser();
-    $todolist = $this->createTodolist(['user_id' => $user->id]);
-
-    $this->patchJson(route('todo-lists.update', $todolist->id), [
-        'user_id' => $user->id, 'name' => 'my first todo list',
-    ]);
+    $this->patchJson(route('todo-lists.update', $todolist->id), ['name' => 'my first todo list'])->json('data');
 
     $this->assertDatabaseHas('todo_lists', ['name' => 'my first todo list']);
 });
@@ -73,13 +53,11 @@ test('update a todo list with validation', function () {
 
 test('delete a todo list', function () {
 
-    $this->withoutExceptionHandling();
-
     $this->authUser();
-    $user = $this->createUser();
-    $todolist = $this->createTodolist(['user_id' => $user->id]);
+    $todolist = $this->createTodolist();
+    $this->withoutExceptionHandling();
 
     $this->deleteJson(route('todo-lists.destroy', $todolist->id));
 
-    $this->assertDatabaseMissing('todo_lists', ['name' => $todolist->id]);
+    $this->assertDatabaseMissing('todo_lists', ['id' => $todolist->id]);
 });

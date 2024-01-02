@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\TodoList;
 use App\Http\Requests\TodoListValidateRequest;
-
+use App\Http\Resources\TodoListResource;
 
 class TodoListController extends Controller
 {
     public function index()
     {
-        $todolists = TodoList::all();
-        return $todolists;
-        // return view('todolist.index', ['todolists' => $todolists]);
+        $todolists = auth()->user()->todolist;
+        return TodoListResource::collection($todolists);
     }
 
     public function create()
@@ -22,19 +21,21 @@ class TodoListController extends Controller
 
     public function store(TodoListValidateRequest $request)
     {
-        $Todolist = TodoList::create($request->all());
-        return $Todolist;
+
+        $todo_list = TodoList::create($request->validated());
+
+        return new TodoListResource($todo_list);
     }
 
     public function update(TodoListValidateRequest $request, TodoList $todo_list)
     {
-        $todolist = TodoList::where('id', $todo_list->id)->update($request->all());
-        return $todolist;
+        $todo_list->update($request->validated());
+        return new TodoListResource($todo_list);
     }
 
     public function show(TodoList $todo_list)
     {
-        return view('todolist.index', $todo_list);
+        return new TodoListResource($todo_list);
     }
 
     public function edit(string $id)

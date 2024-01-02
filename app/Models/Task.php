@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -11,22 +12,22 @@ class Task extends Model
 
     public const STARTED = 'started';
 
-    public const NOT_STARTED = 'not started';
+    public const NOT_STARTED = 'not_started';
 
     public const COMPLETED = 'completed';
 
 
     protected $fillable = [
-        'title', 'description', 'status', 'user_id', 'todo_list_id', 'label_id',
+        'title', 'todo_list_id', 'description', 'status', 'label_id',
     ];
 
     public function todolist()
     {
-        return $this->belongsTo(TodoList::class);
+        return $this->belongsTo(TodoList::class, 'todo_list_id');
     }
 
     public function label()
     {
-        return $this->belongsTo(Label::class);
+        return $this->belongsTo(Label::class, 'label_id');
     }
 }

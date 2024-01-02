@@ -22,8 +22,8 @@ class TodoListValidateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:3|max:255',
-            'user_id' => '',
+            'name' => 'required',
+            'user_id'=> '',
         ];
     }
 }

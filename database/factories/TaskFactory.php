@@ -22,9 +22,7 @@ class TaskFactory extends Factory
         return [
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
-            'user_id' => User::factory()->create()->id,
             'todo_list_id' => TodoList::factory()->create()->id,
-            'label_id' => Label::factory()->create()->id,
         ];
     }
 }

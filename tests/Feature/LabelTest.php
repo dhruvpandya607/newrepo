@@ -4,40 +4,25 @@
 test('fetching all labels', function () {
 
     $this->authUser();
-    $user = $this->createUser();
-    $label = $this->createLabel(['user_id' => $user->id]);
-
+    $this->createLabel(['user_id' => auth()->id()]);
     $this->withoutExceptionHandling();
 
-    $response = $this->getJson(route('label.index'))->json();
+    $response = $this->getJson(route('label.index'))->json('data');
 
     $this->assertEquals(1, count($response));
-});
-
-
-test('creating a label', function () {
-
-    $this->authUser();
-    $user = $this->createUser();
-    $label = $this->createLabel(['user_id' => $user->id]);
-
-    $this->withoutExceptionHandling();
-
-    $this->getJson(route('label.create'))->assertOK();
 });
 
 
 test('storing a label with validation', function () {
 
     $this->authUser();
-    $user = $this->createUser();
-    $label = $this->createLabel(['user_id' => $user->id]);
-
+    $label = $this->createLabel();
     $this->withoutExceptionHandling();
 
-    $this->postJson(route('label.store'), [
-        'name' => $label->name, 'color' => $label->color, 'user_id' => $user->id
-    ]);
+    $storeLabelData = [
+        'name' => $label->name, 'color' => $label->color, 'user_id' => auth()->id()
+    ];
+    $this->postJson(route('label.store'), $storeLabelData)->json('data');
 
     $this->assertDatabaseHas('labels', ['name' => $label->name, 'color' => $label->color]);
 });
@@ -46,12 +31,12 @@ test('storing a label with validation', function () {
 test('updating a label with validation', function () {
 
     $this->authUser();
-    $user = $this->createUser();
-    $label = $this->createLabel(['user_id' => $user->id]);
-
+    $label = $this->createLabel();
     $this->withoutExceptionHandling();
 
-    $this->patchJson(route('label.update', $label->id), ['name' => 'second label', 'color' => 'blue']);
+    $updateLabel = ['name' => 'second label', 'color' => 'blue'];
+
+    $this->patchJson(route('label.update', $label->id), $updateLabel)->json('data');
 
     $this->assertDatabaseHas('labels', ['name' => 'second label', 'color' => 'blue']);
 });
@@ -60,9 +45,7 @@ test('updating a label with validation', function () {
 test('user can delete a label of task', function () {
 
     $this->authUser();
-    $user = $this->createUser();
-    $label = $this->createLabel(['user_id' => $user->id]);
-
+    $label = $this->createLabel(['user_id' => auth()->id()]);
     $this->withoutExceptionHandling();
 
     $this->deleteJson(route('label.destroy', $label->id));

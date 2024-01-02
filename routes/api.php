@@ -18,27 +18,26 @@ Route::get('/', function () {
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::apiResource('todo-lists', TodoListController::class);
-    Route::get('todo-lists/create', [TodoListController::class, 'create'])
-        ->name('todo-lists.create');
 
-    Route::apiResource('tasks', TaskController::class)->except('show');
-    Route::get('tasks/create', [TaskController::class, 'create'])
-        ->name('tasks.create');
+    // Route::apiResource('tasks', TaskController::class)->except('show')->shallow();
+    Route::get('tasks/{todolist}', [TaskController::class, 'index'])->name('tasks.index');
+    Route::post('tasks/{todolist}', [TaskController::class, 'store'])->name('tasks.store');
+    Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
     Route::apiResource('label', LabelController::class)->except('show');
-    Route::get('label/create', [LabelController::class, 'create'])
-        ->name('label.create');
-
-    // drive-api todolists services routes
-    Route::get('/webservice/connect/{webservice}', [WebServiceController::class, 'connect'])
-        ->name('webservice.connect');
-
-    Route::post('/webservice/callback', [WebServiceController::class, 'callback'])
-        ->name('webservice.callback');
-
-    Route::post('/webservice/{webservice}', [WebServiceController::class, 'store'])
-        ->name('webservice.store');
 });
+
+
+// google drive-api todolists services routes
+Route::get('/webservice/connect/{webservice}', [WebServiceController::class, 'connect'])
+    ->name('webservice.connect');
+
+Route::post('/webservice/callback', [WebServiceController::class, 'callback'])
+    ->name('webservice.callback');
+
+Route::post('/webservice/{webservice}', [WebServiceController::class, 'store'])
+    ->name('webservice.store');
 
 
 // Register Login routes
