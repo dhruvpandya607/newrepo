@@ -14,11 +14,6 @@ class TodoListController extends Controller
         return TodoListResource::collection($todolists);
     }
 
-    public function create()
-    {
-        return view('todolist.create');
-    }
-
     public function store(TodoListValidateRequest $request)
     {
 
@@ -36,11 +31,6 @@ class TodoListController extends Controller
     public function show(TodoList $todo_list)
     {
         return new TodoListResource($todo_list);
-    }
-
-    public function edit(string $id)
-    {
-        return view('todolist.edit');
     }
 
     public function destroy(TodoList $todo_list)

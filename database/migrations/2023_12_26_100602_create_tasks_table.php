@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('status')->default(Task::NOT_STARTED);
             $table->foreignId('todo_list_id')->constrained()->onDelete('cascade');
-            $table->foreignId('label_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

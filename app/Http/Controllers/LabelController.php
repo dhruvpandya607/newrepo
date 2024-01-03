@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Label;
 use App\Http\Resources\LabelResource;
 use App\Http\Requests\LabelValidateRequest;
@@ -9,20 +10,15 @@ use App\Http\Requests\LabelValidateRequest;
 class LabelController extends Controller
 {
 
-    public function index()
+    public function index(Task $task)
     {
-        $labels = auth()->user()->label;
-        return LabelResource::collection($labels);
+        $labels = $task->label;
+        return new LabelResource($labels);
     }
 
-    public function create()
+    public function store(LabelValidateRequest $request, Task $task)
     {
-        return view('label.create');
-    }
-
-    public function store(LabelValidateRequest $request)
-    {
-        $Label = Label::create($request->validated());
+        $Label = $task->label()->create($request->validated());
         return new LabelResource($Label);
     }
 
@@ -35,10 +31,5 @@ class LabelController extends Controller
     public function destroy(Label $label)
     {
         $label->delete();
-    }
-
-    public function edit(string $id)
-    {
-        return view('label.edit');
     }
 }

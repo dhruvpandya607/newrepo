@@ -17,11 +17,6 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    public function create()
-    {
-        return view('task.create');
-    }
-
     public function store(TaskValidateRequest $request, TodoList $todolist)
     {
         $task = $todolist->task()->create($request->validated());
@@ -37,10 +32,5 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-    }
-
-    public function edit(string $id)
-    {
-        return view('task.edit');
     }
 }

@@ -14,18 +14,19 @@ Route::get('/', function () {
 });
 
 
-
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::apiResource('todo-lists', TodoListController::class);
 
-    // Route::apiResource('tasks', TaskController::class)->except('show')->shallow();
     Route::get('tasks/{todolist}', [TaskController::class, 'index'])->name('tasks.index');
     Route::post('tasks/{todolist}', [TaskController::class, 'store'])->name('tasks.store');
     Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    Route::apiResource('label', LabelController::class)->except('show');
+    Route::get('label/{task}', [LabelController::class, 'index'])->name('label.index');
+    Route::post('label/{task}', [LabelController::class, 'store'])->name('label.store');
+    Route::patch('label/{label}', [LabelController::class, 'update'])->name('label.update');
+    Route::delete('label/{label}', [LabelController::class, 'destroy'])->name('label.destroy');
 });
 
 

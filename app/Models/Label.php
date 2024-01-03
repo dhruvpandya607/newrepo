@@ -11,6 +11,11 @@ class Label extends Model
 
 
     protected $fillable = [
-        'name', 'color', 'user_id',
+        'name', 'color', 'user_id', 'task_id'
     ];
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class, 'task_id');
+    }
 }

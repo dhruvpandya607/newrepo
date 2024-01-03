@@ -20,12 +20,12 @@ class User extends Authenticatable
 
     public function todolist()
     {
-        return $this->hasMany(TodoList::class, 'user_id');
+        return $this->hasMany(TodoList::class);
     }
 
     public function label()
     {
-        return $this->hasMany(Label::class, 'user_id');
+        return $this->hasMany(Label::class);
     }
 
     /**

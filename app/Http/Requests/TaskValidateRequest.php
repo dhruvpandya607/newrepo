@@ -25,8 +25,8 @@ class TaskValidateRequest extends FormRequest
             'title' => 'required',
             'description' => '',
             'status' => '',
-            'label_id' => '',
-            'todo_list_id' => ''
+            'todo_list_id' => '',
+            'user_id' => '',
         ];
     }
 }
