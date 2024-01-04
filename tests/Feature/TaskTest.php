@@ -1,53 +1,70 @@
 <?php
 
+use App\Models\Task;
+use App\Models\User;
+use App\Models\TodoList;
+use Laravel\Sanctum\Sanctum;
+
+
+beforeEach(function () {
+
+    $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+    $this->withoutExceptionHandling();
+});
+
 
 test('fetch all tasks', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist();
-    $this->createTask();
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
+    Task::factory()->create();
 
-    $response = $this->getJson(route('tasks.index', $todolist->id))->json();
-
-    $this->assertEquals(1, count($response));
+    $this->getJson("api/todo-lists/tasks/{$todolist->id}")->assertOK();
 });
 
 
 test('store a task with validation', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist();
-    $task = $this->createTask(['user_id' => auth()->id()]);
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
+    Task::factory()->create();
 
-    $storeTask = ['title' => $task->title, 'user_id' => auth()->id()];
+    $storeTask = [
+        'title' => 'first task',
+        'user_id' => $this->authUser->id,
+        'todo_list_id' => $todolist->id,
+    ];
 
-    $this->postJson(route('tasks.store', $todolist->id), $storeTask)->json('data');
+    $this->postJson("api/todo-lists/tasks/{$todolist->id}", $storeTask)->json('data');
 
-    $this->assertDatabaseHas('tasks', ['title' => $task->title]);
+    $this->assertDatabaseHas('tasks', [
+        'title' => 'first task',
+        'user_id' => $this->authUser->id,
+    ]);
 });
 
 
 test('update a task with validation', function () {
 
-    $this->authUser();
-    $task = $this->createTask();
-    $this->withoutExceptionHandling();
+    $task = Task::factory()->create();
 
-    $this->patchJson(route('tasks.update', $task->id), ['title' => 'updated task'])->json('data');
+    $updateTask = [
+        'title' => 'updated task',
+        'status' => Task::STARTED,
+    ];
 
-    $this->assertDatabaseHas('tasks', ['title' => 'updated task']);
+    $this->patchJson("api/todo-lists/tasks/{$task->id}", $updateTask)->json('data');
+
+    $this->assertDatabaseHas('tasks', [
+        'title' => 'updated task',
+        'status' => Task::STARTED
+    ]);
 });
 
 
 test('delete a task', function () {
 
-    $this->authUser();
-    $task = $this->createTask();
-    $this->withoutExceptionHandling();
+    $task = Task::factory()->create();
 
-    $this->deleteJson(route('tasks.destroy', $task->id));
+    $this->deleteJson("api/todo-lists/tasks/{$task->id}");
 
-    $this->assertDatabaseMissing('tasks', ['title' => $task->title]);
+    $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
 });

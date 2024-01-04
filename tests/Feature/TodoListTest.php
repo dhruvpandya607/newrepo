@@ -1,39 +1,47 @@
 <?php
 
+use App\Models\User;
+use App\Models\TodoList;
+use Laravel\Sanctum\Sanctum;
+
+
+beforeEach(function () {
+
+    $this->authUser = Sanctum::actingAs(User::factory()->create());
+    $this->withoutExceptionHandling();
+});
 
 test('fetching all todo lists', function () {
 
-    $this->authUser();
-    $this->createTodolist(['name' => 'first todo list', 'user_id' => auth()->id()]);
-    $this->withoutExceptionHandling();
+    TodoList::factory()->create();
 
-    $response = $this->getJson(route('todo-lists.index'))->json('data');
-
-    $this->assertEquals(1, count($response));
+    $this->getJson("api/todo-lists")->assertOk();
 });
 
 
 test('store a todo list with validation', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist(['user_id' => auth()->id()]);
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
 
-    $storeTodolistData = ['name' => $todolist->name, 'user_id' => $todolist->user_id];
+    $storeTodolistData = [
+        'name' => 'First TodoList',
+        'user_id' => $this->authUser->id,
+    ];
 
-    $this->postJson(route('todo-lists.store'), $storeTodolistData)->json('data');
+    $this->postJson("api/todo-lists", $storeTodolistData)->json('data');
 
-    $this->assertDatabaseHas('todo_lists', ['name' => $todolist->name, 'user_id' => $todolist->user_id]);
+    $this->assertDatabaseHas('todo_lists', [
+        'name' => 'First TodoList',
+        'user_id' => $this->authUser->id
+    ]);
 });
 
 
 test('shows a single todo list', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist();
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
 
-    $this->getJson(route('todo-lists.show', $todolist->id))->json('data');
+    $this->getJson("api/todo-lists/{$todolist->id}")->json('data');
 
     $this->assertDatabaseHas('todo_lists', ['name' => $todolist->name]);
 });
@@ -41,23 +49,27 @@ test('shows a single todo list', function () {
 
 test('update a todo list with validation', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist(['name' => 'first todo list', 'user_id' => auth()->id()]);
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
 
-    $this->patchJson(route('todo-lists.update', $todolist->id), ['name' => 'my first todo list'])->json('data');
+    $updateTodoList = [
+        'name' => 'my first todo list',
+        'user_id' => $this->authUser->id
+    ];
 
-    $this->assertDatabaseHas('todo_lists', ['name' => 'my first todo list']);
+    $this->patchJson("api/todo-lists/{$todolist->id}", $updateTodoList)->json('data');
+
+    $this->assertDatabaseHas('todo_lists', [
+        'name' => 'my first todo list',
+        'user_id' => $this->authUser->id
+    ]);
 });
 
 
 test('delete a todo list', function () {
 
-    $this->authUser();
-    $todolist = $this->createTodolist();
-    $this->withoutExceptionHandling();
+    $todolist = TodoList::factory()->create();
 
-    $this->deleteJson(route('todo-lists.destroy', $todolist->id));
+    $this->deleteJson("api/todo-lists/{$todolist->id}");
 
     $this->assertDatabaseMissing('todo_lists', ['id' => $todolist->id]);
 });

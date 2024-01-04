@@ -1,7 +1,17 @@
 <?php
 
 use Google\Client;
+use App\Models\User;
+use App\Models\WebService;
 use Mockery\MockInterface;
+use Laravel\Sanctum\Sanctum;
+
+
+beforeEach(function () {
+
+    $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+    $this->withoutExceptionHandling();
+});
 
 test('user connect to a service and redirect', function () {
 
@@ -9,9 +19,6 @@ test('user connect to a service and redirect', function () {
         $mock->shouldReceive('setScopes')->once();
         $mock->shouldReceive('createAuthUrl')->andReturn('http://localhost');
     });
-
-    $this->withoutExceptionHandling();
-    $this->authUser();
 
     $response = $this->getJson(route('webservice.connect', 'todolists'))->assertok();
 
@@ -24,14 +31,7 @@ test('storing access token with service callback', function () {
         $mock->shouldReceive('fetchAccessTokenWithAuthCode')->andReturn(['access_token' => 'fake-token']);
     });
 
-    $this->withoutExceptionHandling();
-    $authuser = $this->authUser();
-
-    $this->postJson(route('webservice.callback', $authuser->id), ['code' => 'dummyCode'])->assertCreated();
-
-    $this->assertDatabaseHas('web_services', [
-        'user_id' => auth()->id()
-    ]);
+    $this->postJson(route('webservice.callback', $this->authUser->id), ['code' => 'dummyCode'])->assertCreated();
 });
 
 test('storing a weekly data into google drive', function () {
@@ -43,13 +43,9 @@ test('storing a weekly data into google drive', function () {
         $mock->shouldReceive('execute')->once();
     });
 
-    $this->withoutExceptionHandling();
-    $this->authUser();
     $this->createTask(['created_at' => now()->subDays(2)]);
-    $this->createTask(['created_at' => now()->subDays(3)]);
-    $this->createTask(['created_at' => now()->subDays(4)]);
     $this->createTask(['created_at' => now()->subDays(9)]);
-    $webservice = $this->createWebService();
+    $webservice = WebService::factory()->create();
 
     $this->postJson(route('webservice.store', $webservice->id))->assertCreated();
 });

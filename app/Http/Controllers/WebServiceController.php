@@ -18,10 +18,9 @@ class WebServiceController extends Controller
         'https://www.googleapis.com/auth/drive.file',
     ];
 
-    public function connect($webservice, Client $client)
+    public function connect($name, Client $client)
     {
-
-        if ($webservice === 'todolists') {
+        if ($name === 'todolists') {
 
             $client->setScopes(self::TODOLISTS_SCOPES);
             $uri = $client->createAuthUrl();

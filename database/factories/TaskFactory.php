@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskFactory extends Factory
 {
-    public function definition(): array
+    public function definition()
     {
         return [
             'title' => fake()->sentence(),

@@ -10,13 +10,12 @@ class TodoListController extends Controller
 {
     public function index()
     {
-        $todolists = auth()->user()->todolist;
+        $todolists = TodoList::all();
         return TodoListResource::collection($todolists);
     }
 
     public function store(TodoListValidateRequest $request)
     {
-
         $todo_list = TodoList::create($request->validated());
 
         return new TodoListResource($todo_list);

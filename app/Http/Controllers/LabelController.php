@@ -12,8 +12,8 @@ class LabelController extends Controller
 
     public function index(Task $task)
     {
-        $labels = $task->label;
-        return new LabelResource($labels);
+        $labels = Label::where('task_id', $task->id)->get();
+        return LabelResource::collection($labels);
     }
 
     public function store(LabelValidateRequest $request, Task $task)
