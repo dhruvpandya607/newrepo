@@ -23,7 +23,7 @@ class TodoListValidateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'user_id'=> '',
+            'user_id' => '',
         ];
     }
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
     // Todo-lists
     Route::get('todo-lists', [TodoListController::class, 'index'])->name('todo-lists.index');

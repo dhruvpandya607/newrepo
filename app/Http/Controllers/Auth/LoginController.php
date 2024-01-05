@@ -20,7 +20,7 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $user = User::where(['email' => $request->email])->first();
-        
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['Email and Password not matched.'],
@@ -28,7 +28,7 @@ class LoginController extends Controller
         };
 
         $token = $user->createToken('firstToken');
-
+        // dd($token->plainTextToken);
         return ['token' => $token->plainTextToken];
     }
 }
