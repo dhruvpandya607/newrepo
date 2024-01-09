@@ -1,6 +1,5 @@
 <?php
 
-
 test('users registeration with validation', function () {
 
     $this->withoutExceptionHandling();

@@ -15,7 +15,6 @@ class Task extends Model
 
     public const COMPLETED = 'completed';
 
-
     protected $fillable = [
         'title', 'todo_list_id', 'description', 'status', 'user_id',
     ];

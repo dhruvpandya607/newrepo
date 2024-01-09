@@ -2,19 +2,24 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\TodoList;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Silber\Bouncer\BouncerFacade;
 
 class TodoListPolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user)
     {
-        if ($user->role === 'viewer' || $user->role === 'admin') {
+        if (BouncerFacade::can('view-todolist', TodoList::class)) {
             return true;
         }
+
         return false;
     }
 
@@ -23,9 +28,10 @@ class TodoListPolicy
      */
     public function view(User $user, TodoList $todoList)
     {
-        if ($user->role === 'viewer' || $user->role === 'admin') {
+        if (BouncerFacade::can('view-todolist', $todoList)) {
             return true;
         }
+
         return false;
     }
 
@@ -34,9 +40,10 @@ class TodoListPolicy
      */
     public function create(User $user)
     {
-        if ($user->isAdmin()) {
+        if (BouncerFacade::can('create-todolist', TodoList::class)) {
             return true;
         }
+
         return false;
     }
 
@@ -45,9 +52,10 @@ class TodoListPolicy
      */
     public function update(User $user, TodoList $todoList)
     {
-        if ($user->id === $todoList->user_id || $user->role === 'admin') {
+        if (BouncerFacade::can('update-todolist', $todoList)) {
             return true;
         }
+
         return false;
     }
 
@@ -56,25 +64,10 @@ class TodoListPolicy
      */
     public function delete(User $user, TodoList $todoList)
     {
-        if ($user->role === 'admin') {
+        if (BouncerFacade::can('delete-todolist', $todoList)) {
             return true;
         }
+
         return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, TodoList $todoList)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, TodoList $todoList)
-    {
-        //
     }
 }

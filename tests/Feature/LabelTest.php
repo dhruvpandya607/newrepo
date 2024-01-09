@@ -5,13 +5,11 @@ use App\Models\Task;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
-
 beforeEach(function () {
 
     $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
     $this->withoutExceptionHandling();
 });
-
 
 test('fetching all labels', function () {
 
@@ -20,7 +18,6 @@ test('fetching all labels', function () {
 
     $this->getJson("api/todo-lists/tasks/label/{$task->id}")->assertOk();
 });
-
 
 test('storing a label with validation', function () {
 
@@ -34,7 +31,6 @@ test('storing a label with validation', function () {
     $this->assertDatabaseHas('labels', ['name' => 'first label', 'color' => 'red', 'user_id' => $this->authUser->id]);
 });
 
-
 test('updating a label with validation', function () {
 
     $label = Label::factory()->create();
@@ -45,7 +41,6 @@ test('updating a label with validation', function () {
 
     $this->assertDatabaseHas('labels', ['name' => 'second label', 'color' => 'blue']);
 });
-
 
 test('user can delete a label of task', function () {
 

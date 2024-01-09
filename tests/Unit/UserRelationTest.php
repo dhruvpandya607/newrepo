@@ -7,7 +7,6 @@ uses(
 
 use App\Models\TodoList;
 
-
 test('user has many todo lists', function () {
 
     $this->withoutExceptionHandling();

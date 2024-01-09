@@ -6,7 +6,6 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class LabelFactory extends Factory
 {
     public function definition(): array

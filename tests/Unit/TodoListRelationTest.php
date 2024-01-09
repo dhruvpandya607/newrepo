@@ -27,7 +27,6 @@ test('deleting todo list also deletes its tasks', function () {
     $task = $this->createTask(['todo_list_id' => $todolist->id]);
     $task2 = $this->createTask(['todo_list_id' => $todolist2->id]);
 
-
     $todolist->delete();
 
     $this->assertDatabaseMissing('todo_lists', ['id' => $todolist->id]);

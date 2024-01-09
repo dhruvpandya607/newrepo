@@ -14,13 +14,13 @@ Route::get('/todolists', function () {
     ]);
 
     $url = $client->createAuthUrl();
+
     return $url;
 });
 
 Route::get('/todolists/callback', function () {
     return request('code');
 });
-
 
 Route::get('upload', function () {
     $client = new Client();
@@ -30,22 +30,22 @@ Route::get('upload', function () {
     $service = new Google\Service\Drive($client);
     $file = new Google\Service\Drive\DriveFile();
 
-    DEFINE("TESTFILE", 'testfile-small.txt');
-    if (!file_exists(TESTFILE)) {
+    define('TESTFILE', 'testfile-small.txt');
+    if (! file_exists(TESTFILE)) {
         $fh = fopen(TESTFILE, 'w');
         fseek($fh, 1024 * 1024);
-        fwrite($fh, "!", 1);
+        fwrite($fh, '!', 1);
         fclose($fh);
     }
 
-    $file->setName("Hello World!");
+    $file->setName('Hello World!');
     $service->files->create(
         $file,
-        array(
+        [
             'data' => file_get_contents(TESTFILE),
             'mimeType' => 'application/octet-stream',
-            'uploadType' => 'multipart'
-        )
+            'uploadType' => 'multipart',
+        ]
     );
 });
 

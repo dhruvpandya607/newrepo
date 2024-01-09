@@ -9,9 +9,8 @@ class Label extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
-        'name', 'color', 'user_id', 'task_id'
+        'name', 'color', 'user_id', 'task_id',
     ];
 
     public function task()

@@ -8,7 +8,6 @@ use Google\Service\Drive\DriveFile;
 
 class GoogleDrive
 {
-
     protected $client;
 
     public function __construct(Client $client)
@@ -24,14 +23,14 @@ class GoogleDrive
         $service = new Drive($this->client);
         $file = new DriveFile();
 
-        $file->setName("First File!!");
+        $file->setName('First File!!');
         $service->files->create(
             $file,
-            array(
+            [
                 'data' => file_get_contents($zipFileName),
                 'mimeType' => 'application/octet-stream',
-                'uploadType' => 'multipart'
-            )
+                'uploadType' => 'multipart',
+            ]
         );
     }
 }

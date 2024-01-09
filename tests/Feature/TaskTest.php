@@ -1,26 +1,27 @@
 <?php
 
 use App\Models\Task;
-use App\Models\User;
 use App\Models\TodoList;
+use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
-
 
 beforeEach(function () {
 
-    $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+    Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+
+    $this->authUser = Sanctum::actingAs(User::factory()->make()->first());
+    // dd($this->authUser);
     $this->withoutExceptionHandling();
 });
 
-
-test('fetch all tasks', function () {
+test('fetching all tasks of todolist', function () {
 
     $todolist = TodoList::factory()->create();
     Task::factory()->create();
 
     $this->getJson("api/todo-lists/tasks/{$todolist->id}")->assertOK();
 });
-
 
 test('store a task with validation', function () {
 
@@ -41,7 +42,6 @@ test('store a task with validation', function () {
     ]);
 });
 
-
 test('update a task with validation', function () {
 
     $task = Task::factory()->create();
@@ -55,10 +55,9 @@ test('update a task with validation', function () {
 
     $this->assertDatabaseHas('tasks', [
         'title' => 'updated task',
-        'status' => Task::STARTED
+        'status' => Task::STARTED,
     ]);
 });
-
 
 test('delete a task', function () {
 

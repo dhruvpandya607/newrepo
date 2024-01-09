@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Google\Client;
 use App\Models\Task;
-use App\Services\Zipper;
 use App\Models\WebService;
-use Illuminate\Http\Request;
 use App\Services\GoogleDrive;
+use App\Services\Zipper;
+use Google\Client;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +24,7 @@ class WebServiceController extends Controller
 
             $client->setScopes(self::TODOLISTS_SCOPES);
             $uri = $client->createAuthUrl();
+
             return ['uri' => $uri];
         }
     }
@@ -33,8 +34,9 @@ class WebServiceController extends Controller
         $access_token = $client->fetchAccessTokenWithAuthCode($request->code);
 
         $service = WebService::create([
-            'user_id' => auth()->id(), 'token' => $access_token, 'name' => 'todolists'
+            'user_id' => auth()->id(), 'token' => $access_token, 'name' => 'todolists',
         ]);
+
         return $service;
     }
 
@@ -42,7 +44,7 @@ class WebServiceController extends Controller
     {
         $tasks = Task::where('created_at', '>=', now()->subDays(7))->get()->toJson();   // fetching last 7 days data
 
-        $jsonFileName = "tasks.json";                                                   // creating json file with path
+        $jsonFileName = 'tasks.json';                                                   // creating json file with path
         Storage::disk('local')->put("public/$jsonFileName", $tasks);
 
         $zip_file_name = Zipper::createZipFile($jsonFileName);                          // creating zip of this json file

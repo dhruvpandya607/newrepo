@@ -3,22 +3,22 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndAbilities;
-
+    use HasApiTokens, HasFactory, HasRolesAndAbilities, Notifiable;
 
     public const ADMIN = 'admin';
+
     public const VIEWER = 'viewer';
 
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     public function todolist()
@@ -29,11 +29,6 @@ class User extends Authenticatable
     public function label()
     {
         return $this->hasMany(Label::class);
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
     }
 
     /**
