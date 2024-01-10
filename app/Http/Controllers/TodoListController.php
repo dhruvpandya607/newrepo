@@ -21,7 +21,7 @@ class TodoListController extends Controller
     {
         $this->authorize('create', TodoList::class);
 
-        $todo_list = TodoList::create($request->validated());
+        $todo_list = TodoList::createTodolist($request);
 
         return new TodoListResource($todo_list);
     }

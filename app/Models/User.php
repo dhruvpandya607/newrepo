@@ -17,9 +17,7 @@ class User extends Authenticatable
 
     public const VIEWER = 'viewer';
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
     public function todolist()
     {

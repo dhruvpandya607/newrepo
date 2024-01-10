@@ -183,7 +183,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        // 'Artisan' => Illuminate\Support\Facades\Artisan::class,
+        'Artisan' => Illuminate\Support\Facades\Artisan::class,
     ])->toArray(),
 
 ];

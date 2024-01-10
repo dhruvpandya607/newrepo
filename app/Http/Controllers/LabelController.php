@@ -18,13 +18,15 @@ class LabelController extends Controller
 
     public function store(LabelValidateRequest $request, Task $task)
     {
-        $Label = $task->label()->create($request->validated());
+        $this->authorize('create', Label::class);
+        $Label = Label::createLabel($request);
 
         return new LabelResource($Label);
     }
 
     public function update(LabelValidateRequest $request, Label $label)
     {
+        $this->authorize('update', $label);
         $label->update($request->validated());
 
         return new LabelResource($label);
@@ -32,6 +34,11 @@ class LabelController extends Controller
 
     public function destroy(Label $label)
     {
+        $this->authorize('delete', $label);
         $label->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

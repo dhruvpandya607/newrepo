@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Task;
 use App\Models\User;
 use App\Models\WebService;
 use Google\Client;
@@ -42,8 +43,8 @@ test('storing a weekly data into google drive', function () {
         $mock->shouldReceive('execute')->once();
     });
 
-    $this->createTask(['created_at' => now()->subDays(2)]);
-    $this->createTask(['created_at' => now()->subDays(9)]);
+    Task::factory()->create(['created_at' => now()->subDays(2)]);
+    Task::factory()->create(['created_at' => now()->subDays(9)]);
     $webservice = WebService::factory()->create();
 
     $this->postJson(route('webservice.store', $webservice->id))->assertCreated();

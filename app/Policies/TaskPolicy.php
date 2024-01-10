@@ -28,7 +28,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        if (BouncerFacade::can('update-task', $task)) {
+        if (BouncerFacade::can('update-task', $task) && $task->user_id === $user->id) {
             return true;
         }
 

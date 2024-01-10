@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         \App\Models\TodoList::class => \App\Policies\TodoListPolicy::class,
         \App\Models\Task::class => \App\Policies\TaskPolicy::class,
+        \App\Models\Label::class => \App\Policies\LabelPolicy::class,
     ];
 
     /**

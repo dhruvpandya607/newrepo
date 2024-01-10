@@ -15,9 +15,7 @@ class Task extends Model
 
     public const COMPLETED = 'completed';
 
-    protected $fillable = [
-        'title', 'todo_list_id', 'description', 'status', 'user_id',
-    ];
+    protected $guarded = ['id'];
 
     public function todolist()
     {
@@ -27,5 +25,20 @@ class Task extends Model
     public function label()
     {
         return $this->belongsTo(Label::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function createTask($request)
+    {
+        $data = $request->validated();
+        $data['todo_list_id'] = $request->todo_list_id;
+        $data['user_id'] = auth()->id();
+        $task = self::create($data);
+
+        return $task;
     }
 }

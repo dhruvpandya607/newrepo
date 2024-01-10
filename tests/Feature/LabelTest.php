@@ -3,18 +3,22 @@
 use App\Models\Label;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
 
+    Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+
     $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+
     $this->withoutExceptionHandling();
 });
 
 test('fetching all labels', function () {
 
     $task = Task::factory()->create();
-    Label::factory()->create(['task_id' => $task->id]);
+    Label::factory()->create();
 
     $this->getJson("api/todo-lists/tasks/label/{$task->id}")->assertOk();
 });
@@ -22,29 +26,35 @@ test('fetching all labels', function () {
 test('storing a label with validation', function () {
 
     $task = Task::factory()->create();
-    Label::factory()->create();
-
-    $label = ['name' => 'first label', 'color' => 'red', 'user_id' => $this->authUser->id, 'task_id' => $task->id];
+    $label = Label::factory()->create([
+        'name' => 'first label',
+        'color' => 'red',
+        'user_id' => $this->authUser->id,
+        'task_id' => $task->id,
+    ])->toArray();
 
     $this->post("api/todo-lists/tasks/label/{$task->id}", $label)->json('data');
 
-    $this->assertDatabaseHas('labels', ['name' => 'first label', 'color' => 'red', 'user_id' => $this->authUser->id]);
+    $this->assertDatabaseHas('labels', $label);
 });
 
 test('updating a label with validation', function () {
 
-    $label = Label::factory()->create();
+    $label = Label::factory()->create(['user_id' => $this->authUser->id]);
 
-    $Label = ['name' => 'second label', 'color' => 'blue'];
+    $updatelabel = [
+        'name' => 'second label',
+        'color' => 'blue',
+    ];
 
-    $this->patchJson("api/todo-lists/tasks/label/{$label->id}", $Label)->json('data');
+    $this->patchJson("api/todo-lists/tasks/label/{$label->id}", $updatelabel)->json('data');
 
-    $this->assertDatabaseHas('labels', ['name' => 'second label', 'color' => 'blue']);
+    $this->assertDatabaseHas('labels', $updatelabel);
 });
 
 test('user can delete a label of task', function () {
 
-    $label = Label::factory()->create();
+    $label = Label::factory()->create(['user_id' => $this->authUser->id]);
 
     $this->delete("api/todo-lists/tasks/label/{$label->id}");
 

@@ -16,11 +16,11 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    public function store(TaskValidateRequest $request, TodoList $todolist)
+    public function store(TaskValidateRequest $request)
     {
         $this->authorize('create', Task::class);
 
-        $task = $todolist->task()->create($request->validated());
+        $task = Task::createTask($request);
 
         return new TaskResource($task);
     }
@@ -39,5 +39,9 @@ class TaskController extends Controller
         $this->authorize('delete', $task);
 
         $task->delete();
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

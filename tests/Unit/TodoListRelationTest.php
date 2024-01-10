@@ -24,8 +24,8 @@ test('deleting todo list also deletes its tasks', function () {
 
     $todolist = TodoList::factory()->create();
     $todolist2 = TodoList::factory()->create();
-    $task = $this->createTask(['todo_list_id' => $todolist->id]);
-    $task2 = $this->createTask(['todo_list_id' => $todolist2->id]);
+    $task = Task::factory()->create(['todo_list_id' => $todolist->id]);
+    $task2 = Task::factory()->create(['todo_list_id' => $todolist2->id]);
 
     $todolist->delete();
 

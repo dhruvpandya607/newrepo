@@ -26,9 +26,9 @@ class TodoListPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, TodoList $todoList)
+    public function view(User $user, TodoList $todo_list)
     {
-        if (BouncerFacade::can('view-todolist', $todoList)) {
+        if (BouncerFacade::can('view-todolist', $todo_list)) {
             return true;
         }
 
@@ -50,9 +50,9 @@ class TodoListPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, TodoList $todoList)
+    public function update(User $user, TodoList $todo_list)
     {
-        if (BouncerFacade::can('update-todolist', $todoList)) {
+        if (BouncerFacade::can('update-todolist', $todo_list) && $todo_list->user_id === $user->id) {
             return true;
         }
 
@@ -62,9 +62,33 @@ class TodoListPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, TodoList $todoList)
+    public function delete(User $user, TodoList $todo_list)
     {
-        if (BouncerFacade::can('delete-todolist', $todoList)) {
+        if (BouncerFacade::can('delete-todolist', $todo_list) && $todo_list->user_id === $user->id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, TodoList $todo_list)
+    {
+        if (BouncerFacade::can('restore-todolist', $todo_list)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, TodoList $todo_list)
+    {
+        if (BouncerFacade::can('delete-todolist', $todo_list) && $todo_list->user_id === $user->id) {
             return true;
         }
 
