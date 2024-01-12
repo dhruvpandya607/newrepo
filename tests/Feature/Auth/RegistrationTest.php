@@ -4,7 +4,9 @@ test('users registeration with validation', function () {
 
     $this->withoutExceptionHandling();
 
-    $this->postJson(route('user.register'), ['name' => 'dhruv', 'email' => 'dhruv@gmail.com', 'password' => 'password']);
+    $registerUser = ['name' => 'dhruv', 'email' => 'dhruv@dhruv.com', 'password' => bcrypt('password123')];
 
-    $this->assertDatabaseHas('users', ['name' => 'dhruv']);
+    $this->postJson(route('user.register'), $registerUser);
+
+    $this->assertDatabaseHas('users', $registerUser);
 });

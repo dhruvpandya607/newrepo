@@ -10,7 +10,12 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    $this->authUser = Sanctum::actingAs(User::factory()->make()->first(), ['*']);
+    // $user = Sanctum::actingAs(User::factory()->create()->first(), ['*']);
+    $user = Sanctum::actingAs(User::find(4), ['*']);
+
+    $this->withHeaders([
+        'todolist' => $user->todolists->first()->id,
+    ]);
 
     $this->withoutExceptionHandling();
 });
@@ -18,7 +23,6 @@ beforeEach(function () {
 test('fetching all tasks of todolist', function () {
 
     $todolist = TodoList::factory()->create();
-    Task::factory()->create();
 
     $this->getJson("api/todo-lists/tasks/{$todolist->id}")->assertOK();
 });
@@ -26,11 +30,7 @@ test('fetching all tasks of todolist', function () {
 test('store a task with validation', function () {
 
     $todolist = TodoList::factory()->create();
-    $storeTask = Task::factory()->create([
-        'title' => 'first task',
-        'user_id' => $this->authUser->id,
-        'todo_list_id' => $todolist->id,
-    ])->toArray();
+    $storeTask = Task::factory()->raw();
 
     $this->postJson("api/todo-lists/tasks/{$todolist->id}", $storeTask)->json('data');
 
@@ -39,7 +39,7 @@ test('store a task with validation', function () {
 
 test('update a task with validation', function () {
 
-    $task = Task::factory()->create(['user_id' => $this->authUser->id]);
+    $task = Task::factory()->create();
 
     $updateTask = [
         'title' => 'updated task',
@@ -53,7 +53,7 @@ test('update a task with validation', function () {
 
 test('delete a task', function () {
 
-    $task = Task::factory()->create(['user_id' => $this->authUser->id]);
+    $task = Task::factory()->create();
 
     $this->deleteJson("api/todo-lists/tasks/{$task->id}");
 

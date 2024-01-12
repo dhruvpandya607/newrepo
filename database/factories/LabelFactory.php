@@ -13,7 +13,7 @@ class LabelFactory extends Factory
         return [
             'name' => fake()->name(),
             'color' => fake()->colorName(),
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::where('role', 'admin')->first()->id,
             'task_id' => Task::factory()->create()->id,
         ];
     }

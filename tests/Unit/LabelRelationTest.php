@@ -12,7 +12,7 @@ test('label belongs to task', function () {
 
     $this->withoutExceptionHandling();
 
-    $task = Task::factory()->create();
+    $task = Task::factory()->make();
     $label = Label::factory()->make();
 
     $this->assertInstanceOf(Task::class, $label->task);

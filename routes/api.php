@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\LabelController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\TodoListController;
-use App\Http\Controllers\WebServiceController;
+use App\Http\Controllers\Label\LabelController;
+use App\Http\Controllers\Task\TaskController;
+use App\Http\Controllers\TodoList\TodoListController;
+use App\Http\Controllers\WebService\WebServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -30,12 +30,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('todo-lists/tasks/label/{task}', [LabelController::class, 'store']);
         Route::patch('todo-lists/tasks/label/{label}', [LabelController::class, 'update']);
         Route::delete('todo-lists/tasks/label/{label}', [LabelController::class, 'destroy']);
-
-        // google-drive-api todolists services
-        Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect'])->name('webservice.connect');
-        Route::post('webservice/callback', [WebServiceController::class, 'callback'])->name('webservice.callback');
-        Route::post('webservice/{webservice}', [WebServiceController::class, 'store'])->name('webservice.store');
     });
+
+    // google-drive-api todolists services
+    Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect'])->name('webservice.connect');
+    Route::post('webservice/callback', [WebServiceController::class, 'callback'])->name('webservice.callback');
+    Route::post('webservice/{webservice}', [WebServiceController::class, 'store'])->name('webservice.store');
 });
 
 // Register

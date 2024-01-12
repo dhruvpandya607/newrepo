@@ -9,24 +9,24 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    $this->authUser = Sanctum::actingAs(User::factory()->make()->first(), ['*']);
+    // $user = Sanctum::actingAs(User::factory()->create()->first(), ['*']);
+    $user = Sanctum::actingAs(User::find(4), ['*']);
+
+    $this->withHeaders([
+        'todolist' => $user->todolists->first()->id,
+    ]);
 
     $this->withoutExceptionHandling();
 });
 
 test('fetching all todo lists', function () {
 
-    TodoList::factory()->raw();
-
     $this->getJson('api/todo-lists')->assertOk();
 });
 
 test('store a todo list with validation', function () {
 
-    $storeTodolistData = TodoList::factory()->create([
-        'name' => 'First Todolist',
-        'user_id' => $this->authUser->id,
-    ])->toArray();
+    $storeTodolistData = TodoList::factory()->create()->toArray();
 
     $this->postJson('api/todo-lists', $storeTodolistData)->json('data');
 
@@ -35,9 +35,7 @@ test('store a todo list with validation', function () {
 
 test('shows a single todo list', function () {
 
-    $todolist = TodoList::factory()->create([
-        'user_id' => $this->authUser->id,
-    ]);
+    $todolist = TodoList::factory()->make();
 
     $this->getJson("api/todo-lists/{$todolist->id}")->json('data');
 
@@ -49,22 +47,17 @@ test('shows a single todo list', function () {
 
 test('update a todo list with validation', function () {
 
-    $todolist = TodoList::factory()->create([
-        'user_id' => $this->authUser->id,
-    ]);
+    $todolist = TodoList::factory()->make();
 
-    $this->putJson("api/todo-lists/{$todolist->id}", [
-        'name' => 'my first todo list',
-    ])->json('data');
+    $updatetodolist = ['name' => 'new todolist'];
+    $this->putJson("api/todo-lists/{$todolist->id}", $updatetodolist)->json('data');
 
-    $this->assertDatabaseHas('todo_lists', [
-        'name' => 'my first todo list',
-    ]);
+    $this->assertDatabaseHas('todo_lists', $updatetodolist);
 });
 
 test('delete a todo list', function () {
 
-    $todolist = TodoList::factory()->create(['user_id' => $this->authUser->id]);
+    $todolist = TodoList::factory()->create();
 
     $this->deleteJson("api/todo-lists/{$todolist->id}");
 

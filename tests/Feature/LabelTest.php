@@ -10,7 +10,11 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+    $user = Sanctum::actingAs(User::find(4), ['*']);
+    // dd(User::find(4)->todolists()->first()->id);
+    $this->withHeaders([
+        'todolist' => $user->todolists->first()->id,
+    ]);
 
     $this->withoutExceptionHandling();
 });
@@ -18,7 +22,6 @@ beforeEach(function () {
 test('fetching all labels', function () {
 
     $task = Task::factory()->create();
-    Label::factory()->create();
 
     $this->getJson("api/todo-lists/tasks/label/{$task->id}")->assertOk();
 });
@@ -26,12 +29,7 @@ test('fetching all labels', function () {
 test('storing a label with validation', function () {
 
     $task = Task::factory()->create();
-    $label = Label::factory()->create([
-        'name' => 'first label',
-        'color' => 'red',
-        'user_id' => $this->authUser->id,
-        'task_id' => $task->id,
-    ])->toArray();
+    $label = Label::factory()->raw();
 
     $this->post("api/todo-lists/tasks/label/{$task->id}", $label)->json('data');
 
@@ -40,7 +38,7 @@ test('storing a label with validation', function () {
 
 test('updating a label with validation', function () {
 
-    $label = Label::factory()->create(['user_id' => $this->authUser->id]);
+    $label = Label::factory()->create();
 
     $updatelabel = [
         'name' => 'second label',
@@ -54,7 +52,7 @@ test('updating a label with validation', function () {
 
 test('user can delete a label of task', function () {
 
-    $label = Label::factory()->create(['user_id' => $this->authUser->id]);
+    $label = Label::factory()->create();
 
     $this->delete("api/todo-lists/tasks/label/{$label->id}");
 

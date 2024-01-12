@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\TodoList;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade;
+use Vinkla\Hashids\Facades\Hashids;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,13 +24,24 @@ class DatabaseSeeder extends Seeder
 
         BouncerFacade::allow($admin)->everything();
 
-        $authUser = User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'dhruv',
             'email' => 'dhruv@gmail.com',
             'password' => 'password123',
             'role' => 'admin',
         ]);
 
-        BouncerFacade::assign($admin)->to($authUser);
+        $todolist = TodoList::factory()->create([
+            'name' => 'demo list',
+            'user_id' => $user->id,
+        ]);
+
+        $todolist->unique_hash = Hashids::connection(TodoList::class)->encode($todolist->id);
+        $todolist->save();
+
+        $user->todolists()->attach($todolist->id);
+        BouncerFacade::scope()->to($todolist->id);
+
+        BouncerFacade::assign(User::ADMIN)->to($user);
     }
 }

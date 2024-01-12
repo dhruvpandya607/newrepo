@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\WebService;
 
+use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\WebService;
 use App\Services\GoogleDrive;

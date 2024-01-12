@@ -1,15 +1,19 @@
 <?php
 
+use Google\Client;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\WebService;
-use Google\Client;
-use Laravel\Sanctum\Sanctum;
 use Mockery\MockInterface;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
 
-    $this->authUser = Sanctum::actingAs(User::factory()->create(), ['*']);
+    Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+
+    $this->user = Sanctum::actingAs(User::find(4), ['*']);
+
     $this->withoutExceptionHandling();
 });
 
@@ -31,7 +35,7 @@ test('storing access token with service callback', function () {
         $mock->shouldReceive('fetchAccessTokenWithAuthCode')->andReturn(['access_token' => 'fake-token']);
     });
 
-    $this->postJson(route('webservice.callback', $this->authUser->id), ['code' => 'dummyCode'])->assertCreated();
+    $this->postJson(route('webservice.callback', $this->user->id), ['code' => 'dummyCode'])->assertCreated();
 });
 
 test('storing a weekly data into google drive', function () {

@@ -5,15 +5,12 @@ uses(
     Illuminate\Foundation\Testing\RefreshDatabase::class,
 );
 
-use App\Models\TodoList;
 use App\Models\User;
 
-test('user has many todo lists', function () {
 
-    $this->withoutExceptionHandling();
+test('user belongs to many todo lists', function () {
 
-    $user = User::factory()->create();
-    $todolist = TodoList::factory()->create(['user_id' => $user->id]);
+    $user = User::factory()->hasTodolists(3)->create();
 
-    $this->assertInstanceOf(TodoList::class, $user->todolist->first());
+    $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $user->todolists);
 });

@@ -11,5 +11,5 @@ class WebService extends Model
 
     protected $casts = ['token' => 'json'];
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 }

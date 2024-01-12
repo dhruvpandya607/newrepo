@@ -16,9 +16,9 @@ class TodoList extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class, 'user_todolist');
     }
 
     public static function createTodolist($request)

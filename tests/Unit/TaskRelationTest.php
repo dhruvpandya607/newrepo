@@ -12,7 +12,7 @@ test('task belongs to todo list', function () {
 
     $this->withoutExceptionHandling();
 
-    $todolist = TodoList::factory()->create();
+    $todolist = TodoList::factory()->make();
     $task = Task::factory()->make();
 
     $this->assertInstanceOf(TodoList::class, $task->todolist);

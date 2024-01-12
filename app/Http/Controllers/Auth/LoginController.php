@@ -27,7 +27,6 @@ class LoginController extends Controller
 
         $token = $user->createToken('firstToken');
 
-        // dd($token->plainTextToken);
         return ['token' => $token->plainTextToken];
     }
 }

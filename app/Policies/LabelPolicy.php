@@ -64,7 +64,7 @@ class LabelPolicy
      */
     public function forceDelete(User $user, Label $label)
     {
-        if (BouncerFacade::can('delete-label', $label)) {
+        if (BouncerFacade::can('delete-label', $label) && $label->user_id === $user->id) {
             return true;
         }
 

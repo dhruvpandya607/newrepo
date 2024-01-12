@@ -21,7 +21,14 @@ class Label extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public static function createLabel()
+    public static function createLabel($request)
     {
+        $data = $request->validated();
+        $data['task_id'] = $request->task_id;
+        $data['user_id'] = auth()->id();
+
+        $label = self::create($data);
+
+        return $label;
     }
 }

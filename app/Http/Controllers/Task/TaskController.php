@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Task;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskValidateRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;

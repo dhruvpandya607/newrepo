@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Task;
-use App\Models\TodoList;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,8 +14,8 @@ class TaskFactory extends Factory
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
             'status' => Task::NOT_STARTED,
-            'todo_list_id' => TodoList::factory()->create()->id,
-            'user_id' => User::factory()->create()->id,
+            'todo_list_id' => User::find(4)->todolists()->first()->id,
+            'user_id' => User::where('role', 'admin')->first()->id,
         ];
     }
 }

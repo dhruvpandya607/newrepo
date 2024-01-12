@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\TodoList;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\TodoListValidateRequest;
 use App\Http\Resources\TodoListResource;
 use App\Models\TodoList;
