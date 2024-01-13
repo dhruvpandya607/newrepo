@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\WebService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WebServiceFactory extends Factory
 {
+    protected $model = WebService::class;
+
     /**
      * Define the model's default state.
      *
@@ -18,8 +21,8 @@ class WebServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->create()->id,
             'name' => 'todolists',
+            'user_id' => User::where('role', 'admin')->first()->id,
             'token' => ['access_token' => 'fake-token'],
         ];
     }

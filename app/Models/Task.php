@@ -17,19 +17,14 @@ class Task extends Model
 
     protected $guarded = ['id'];
 
-    public function todolist()
+    public function todolists()
     {
         return $this->belongsTo(TodoList::class, 'todo_list_id');
     }
 
-    public function label()
+    public function users()
     {
-        return $this->belongsTo(Label::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class);
     }
 
     public static function createTask($request)

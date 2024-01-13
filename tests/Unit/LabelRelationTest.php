@@ -1,19 +1,20 @@
 <?php
 
 use App\Models\Label;
-use App\Models\Task;
+use Illuminate\Support\Facades\Artisan;
 
 uses(
     Tests\TestCase::class,
     Illuminate\Foundation\Testing\RefreshDatabase::class,
 );
 
-test('label belongs to task', function () {
+test('label belongs to many todolist', function () {
+
+    Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
     $this->withoutExceptionHandling();
 
-    $task = Task::factory()->make();
-    $label = Label::factory()->make();
+    $label = Label::factory()->hasTodolists()->create();
 
-    $this->assertInstanceOf(Task::class, $label->task);
+    $this->assertTrue($label->todolists()->exists());
 });

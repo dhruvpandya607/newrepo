@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             'title' => 'administration',
         ]);
 
-        BouncerFacade::allow($admin)->everything();
+        foreach (config('abilities.abilities') as $ability) {
+            BouncerFacade::allow($admin)->to($ability['ability'], $ability['model']);
+        }
 
         $user = User::factory()->create([
             'name' => 'dhruv',
@@ -42,6 +44,6 @@ class DatabaseSeeder extends Seeder
         $user->todolists()->attach($todolist->id);
         BouncerFacade::scope()->to($todolist->id);
 
-        BouncerFacade::assign(User::ADMIN)->to($user);
+        BouncerFacade::assign('admin')->to($user);
     }
 }

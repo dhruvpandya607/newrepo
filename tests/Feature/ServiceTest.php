@@ -12,7 +12,8 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    $this->user = Sanctum::actingAs(User::find(4), ['*']);
+    $this->user = User::find(1);
+    Sanctum::actingAs($this->user, ['*']);
 
     $this->withoutExceptionHandling();
 });

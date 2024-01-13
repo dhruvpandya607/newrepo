@@ -1,37 +1,35 @@
 <?php
 
-use App\Models\Label;
-use App\Models\Task;
 use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
+use App\Models\Label;
+use App\Models\TodoList;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    $user = Sanctum::actingAs(User::find(4), ['*']);
-    // dd(User::find(4)->todolists()->first()->id);
+    $user = User::find(1);
     $this->withHeaders([
-        'todolist' => $user->todolists->first()->id,
+        'todolist' => $user->todolists()->first()->id,
     ]);
-
-    $this->withoutExceptionHandling();
+    Sanctum::actingAs($user, ['*']);
 });
 
 test('fetching all labels', function () {
 
-    $task = Task::factory()->create();
+    $todolist = TodoList::factory()->create();
 
-    $this->getJson("api/todo-lists/tasks/label/{$task->id}")->assertOk();
+    $this->getJson("api/todo-lists/tasks/label/{$todolist->id}")->assertOk();
 });
 
 test('storing a label with validation', function () {
 
-    $task = Task::factory()->create();
-    $label = Label::factory()->raw();
+    $todolist = TodoList::factory()->create();
+    $label = Label::factory()->create()->toArray();
 
-    $this->post("api/todo-lists/tasks/label/{$task->id}", $label)->json('data');
+    $this->post("api/todo-lists/tasks/label/{$todolist->id}", $label)->json('data');
 
     $this->assertDatabaseHas('labels', $label);
 });
@@ -39,11 +37,10 @@ test('storing a label with validation', function () {
 test('updating a label with validation', function () {
 
     $label = Label::factory()->create();
-
-    $updatelabel = [
+    $updatelabel = Label::factory()->create([
         'name' => 'second label',
-        'color' => 'blue',
-    ];
+        'color' => 'blue'
+    ])->toArray();
 
     $this->patchJson("api/todo-lists/tasks/label/{$label->id}", $updatelabel)->json('data');
 

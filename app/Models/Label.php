@@ -11,22 +11,14 @@ class Label extends Model
 
     protected $guarded = ['id'];
 
-    public function task()
+    public function todolists()
     {
-        return $this->belongsTo(Task::class, 'task_id');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(TodoList::class, 'todo_lists_label');
     }
 
     public static function createLabel($request)
     {
         $data = $request->validated();
-        $data['task_id'] = $request->task_id;
-        $data['user_id'] = auth()->id();
-
         $label = self::create($data);
 
         return $label;

@@ -12,7 +12,7 @@ class TaskResource extends JsonResource
         return [
             'title' => $this->title,
             'status' => $this->status,
-            'todolist' => $this->todolist->name,
+            'todolist' => $this->todolists->name,
             'created_at' => $this->created_at->diffForHumans(),
         ];
     }

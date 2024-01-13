@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('color');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->unsignedBigInteger('todo_list_id');
+            $table->foreign('todo_list_id')->references('id')->on('todo_lists')->onDelete('cascade');
             $table->timestamps();
         });
     }

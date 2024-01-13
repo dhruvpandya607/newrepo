@@ -28,7 +28,7 @@ class LabelPolicy
      */
     public function update(User $user, Label $label)
     {
-        if (BouncerFacade::can('update-label', $label) && $label->user_id === $user->id) {
+        if (BouncerFacade::can('update-label', $label)) {
             return true;
         }
 
@@ -40,7 +40,7 @@ class LabelPolicy
      */
     public function delete(User $user, Label $label)
     {
-        if (BouncerFacade::can('delete-label', $label) && $label->user_id === $user->id) {
+        if (BouncerFacade::can('delete-label', $label)) {
             return true;
         }
 
@@ -64,7 +64,7 @@ class LabelPolicy
      */
     public function forceDelete(User $user, Label $label)
     {
-        if (BouncerFacade::can('delete-label', $label) && $label->user_id === $user->id) {
+        if (BouncerFacade::can('delete-label', $label)) {
             return true;
         }
 
