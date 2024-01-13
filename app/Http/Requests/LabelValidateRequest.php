@@ -24,8 +24,7 @@ class LabelValidateRequest extends FormRequest
         return [
             'name' => 'required',
             'color' => 'required',
-            'user_id' => '',
-            'task_id' => '',
+            'todo_list_id' => '',
         ];
     }
 }

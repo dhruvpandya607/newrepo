@@ -9,14 +9,12 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    // $user = Sanctum::actingAs(User::factory()->create()->first(), ['*']);
-    $user = Sanctum::actingAs(User::find(4), ['*']);
-
+    $user = User::find(1);
     $this->withHeaders([
-        'todolist' => $user->todolists->first()->id,
+        'todolist' => $user->todolists()->first()->id,
     ]);
-
-    $this->withoutExceptionHandling();
+    $this->todolist = TodoList::find(1);
+    Sanctum::actingAs($user, ['*']);
 });
 
 test('fetching all todo lists', function () {
@@ -26,28 +24,25 @@ test('fetching all todo lists', function () {
 
 test('store a todo list with validation', function () {
 
-    $storeTodolistData = TodoList::factory()->create()->toArray();
+    $todolist = TodoList::find(1)->toArray();
 
-    $this->postJson('api/todo-lists', $storeTodolistData)->json('data');
+    $this->postJson('api/todo-lists', $todolist)->json('data');
 
-    $this->assertDatabaseHas('todo_lists', $storeTodolistData);
+    $this->assertDatabaseHas('todo_lists', $todolist);
 });
 
 test('shows a single todo list', function () {
 
-    $todolist = TodoList::factory()->make();
+    $todolist = TodoList::factory()->create();
 
     $this->getJson("api/todo-lists/{$todolist->id}")->json('data');
 
-    $this->assertDatabaseHas('todo_lists', [
-        'name' => $todolist['name'],
-        'user_id' => $todolist['user_id'],
-    ]);
+    $this->assertDatabaseHas('todo_lists', $todolist->toArray());
 });
 
 test('update a todo list with validation', function () {
 
-    $todolist = TodoList::factory()->make();
+    $todolist = TodoList::factory()->create();
 
     $updatetodolist = ['name' => 'new todolist'];
 

@@ -10,14 +10,12 @@ beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
-    // $user = Sanctum::actingAs(User::factory()->create()->first(), ['*']);
-    $user = Sanctum::actingAs(User::find(4), ['*']);
-
+    $user = User::find(1);
     $this->withHeaders([
-        'todolist' => $user->todolists->first()->id,
+        'todolist' => $user->todolists()->first()->id,
     ]);
 
-    $this->withoutExceptionHandling();
+    Sanctum::actingAs($user, ['*']);
 });
 
 test('fetching all tasks of todolist', function () {

@@ -11,9 +11,14 @@ class TodoList extends Model
 
     protected $guarded = ['id'];
 
-    public function task()
+    public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class, 'todo_lists_label');
     }
 
     public function users()

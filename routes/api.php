@@ -26,16 +26,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('todo-lists/tasks/{task}', [TaskController::class, 'destroy']);
 
         // Label
-        Route::get('todo-lists/tasks/label/{task}', [LabelController::class, 'index']);
-        Route::post('todo-lists/tasks/label/{task}', [LabelController::class, 'store']);
+        Route::get('todo-lists/tasks/label/{todo_list}', [LabelController::class, 'index']);
+        Route::post('todo-lists/tasks/label/{todo_list}', [LabelController::class, 'store']);
         Route::patch('todo-lists/tasks/label/{label}', [LabelController::class, 'update']);
         Route::delete('todo-lists/tasks/label/{label}', [LabelController::class, 'destroy']);
-    });
 
-    // google-drive-api todolists services
-    Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect'])->name('webservice.connect');
-    Route::post('webservice/callback', [WebServiceController::class, 'callback'])->name('webservice.callback');
-    Route::post('webservice/{webservice}', [WebServiceController::class, 'store'])->name('webservice.store');
+        // google-drive-api todolists services
+        Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect'])->name('webservice.connect');
+        Route::post('webservice/callback', [WebServiceController::class, 'callback'])->name('webservice.callback');
+        Route::post('webservice/{webservice}', [WebServiceController::class, 'store'])->name('webservice.store');
+    });
 });
 
 // Register

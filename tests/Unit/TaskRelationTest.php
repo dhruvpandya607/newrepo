@@ -2,6 +2,7 @@
 
 use App\Models\Task;
 use App\Models\TodoList;
+use Illuminate\Support\Facades\Artisan;
 
 uses(
     Tests\TestCase::class,
@@ -10,10 +11,11 @@ uses(
 
 test('task belongs to todo list', function () {
 
+    Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+
     $this->withoutExceptionHandling();
 
-    $todolist = TodoList::factory()->make();
-    $task = Task::factory()->make();
+    $task = Task::factory()->forTodolists()->create();
 
-    $this->assertInstanceOf(TodoList::class, $task->todolist);
+    $this->assertTrue($task->todolists()->exists());
 });

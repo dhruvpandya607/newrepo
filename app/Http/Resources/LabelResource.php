@@ -12,7 +12,7 @@ class LabelResource extends JsonResource
         return [
             'name' => $this->name,
             'color' => $this->color,
-            'task' => $this->task->name,
+            'todolist' => $this->todolists->name,
         ];
     }
 }
