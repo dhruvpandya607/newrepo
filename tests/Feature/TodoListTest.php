@@ -50,6 +50,7 @@ test('update a todo list with validation', function () {
     $todolist = TodoList::factory()->make();
 
     $updatetodolist = ['name' => 'new todolist'];
+
     $this->putJson("api/todo-lists/{$todolist->id}", $updatetodolist)->json('data');
 
     $this->assertDatabaseHas('todo_lists', $updatetodolist);

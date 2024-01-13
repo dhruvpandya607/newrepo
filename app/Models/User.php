@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, HasRolesAndAbilities, Notifiable;
 
     public const ADMIN = 'admin';
+
     public const VIEWER = 'viewer';
 
     protected $guarded = ['id'];
@@ -22,7 +23,6 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(TodoList::class, 'user_todolist');
     }
-
 
     /**
      * The attributes that should be hidden for serialization.

@@ -7,7 +7,6 @@ uses(
 
 use App\Models\User;
 
-
 test('user belongs to many todo lists', function () {
 
     $user = User::factory()->hasTodolists(3)->create();

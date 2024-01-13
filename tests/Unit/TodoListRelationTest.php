@@ -9,7 +9,6 @@ use App\Models\Task;
 use App\Models\TodoList;
 use Illuminate\Support\Facades\Artisan;
 
-
 // beforeEach(function () {
 
 //     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
@@ -30,7 +29,6 @@ test('todo list belongs to many users', function () {
 
     $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $todolist->users);
 });
-
 
 test('deleting todo list also deletes its tasks', function () {
 
