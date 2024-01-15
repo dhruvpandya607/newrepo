@@ -8,7 +8,6 @@ uses(
 use App\Models\TodoList;
 use Illuminate\Support\Facades\Artisan;
 
-
 beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
@@ -25,7 +24,14 @@ test('todo lists has many tasks', function () {
 
 test('todo list belongs to many users', function () {
 
-    $todolist = TodoList::factory()->hasUsers(3)->create();
+    $todolist = TodoList::factory()->hasUsers()->create();
 
     $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $todolist->users);
+});
+
+test('todo list belongs to many labels', function () {
+
+    $todolist = TodoList::factory()->hasLabels()->create();
+
+    $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $todolist->labels);
 });

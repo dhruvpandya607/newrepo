@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\User;
 use App\Models\Label;
 use App\Models\TodoList;
-use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Laravel\Sanctum\Sanctum;
 
 beforeEach(function () {
 
@@ -19,17 +19,17 @@ beforeEach(function () {
 
 test('fetching all labels', function () {
 
-    $todolist = TodoList::factory()->create();
+    $todolist = TodoList::find(1);
 
-    $this->getJson("api/todo-lists/tasks/label/{$todolist->id}")->assertOk();
+    $this->getJson("api/todo-lists/tasks/{$todolist->id}/label")->assertOk();
 });
 
 test('storing a label with validation', function () {
 
-    $todolist = TodoList::factory()->create();
-    $label = Label::factory()->create()->toArray();
+    $todolist = TodoList::find(1);
+    $label = Label::factory()->raw();
 
-    $this->post("api/todo-lists/tasks/label/{$todolist->id}", $label)->json('data');
+    $this->post("api/todo-lists/tasks/{$todolist->id}/label", $label)->json('data');
 
     $this->assertDatabaseHas('labels', $label);
 });
@@ -37,21 +37,21 @@ test('storing a label with validation', function () {
 test('updating a label with validation', function () {
 
     $label = Label::factory()->create();
-    $updatelabel = Label::factory()->create([
+    $updateLabel = [
         'name' => 'second label',
-        'color' => 'blue'
-    ])->toArray();
+        'color' => 'blue',
+    ];
 
-    $this->patchJson("api/todo-lists/tasks/label/{$label->id}", $updatelabel)->json('data');
+    $this->putJson("api/todo-lists/tasks/{$label->id}/label", $updateLabel)->json('data');
 
-    $this->assertDatabaseHas('labels', $updatelabel);
+    $this->assertDatabaseHas('labels', $updateLabel);
 });
 
 test('user can delete a label of task', function () {
 
     $label = Label::factory()->create();
 
-    $this->delete("api/todo-lists/tasks/label/{$label->id}");
+    $this->delete("api/todo-lists/tasks/{$label->id}/label");
 
     $this->assertDatabaseMissing('labels', ['id' => $label->id]);
 });

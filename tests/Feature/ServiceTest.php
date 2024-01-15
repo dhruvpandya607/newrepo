@@ -1,21 +1,22 @@
 <?php
 
-use Google\Client;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\WebService;
-use Mockery\MockInterface;
-use Laravel\Sanctum\Sanctum;
+use Google\Client;
 use Illuminate\Support\Facades\Artisan;
+use Laravel\Sanctum\Sanctum;
+use Mockery\MockInterface;
 
 beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
     $this->user = User::find(1);
+    $this->withHeaders([
+        'todolist' => $this->user->todolists()->first()->id,
+    ]);
     Sanctum::actingAs($this->user, ['*']);
-
-    $this->withoutExceptionHandling();
 });
 
 test('user connect to a service and redirect', function () {

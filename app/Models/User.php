@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, HasRolesAndAbilities, Notifiable;
 
     public const ADMIN = 'admin';
+
     public const VIEWER = 'viewer';
 
     protected $guarded = ['id'];
@@ -25,7 +26,7 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class);
+        return $this->belongsToMany(Task::class, 'user_task');
     }
 
     /**

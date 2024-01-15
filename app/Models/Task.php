@@ -24,14 +24,13 @@ class Task extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'user_task');
     }
 
     public static function createTask($request)
     {
         $data = $request->validated();
         $data['todo_list_id'] = $request->todo_list_id;
-        $data['user_id'] = auth()->id();
         $task = self::create($data);
 
         return $task;

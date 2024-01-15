@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Label;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\LabelValidateRequest;
+use App\Http\Resources\LabelResource;
 use App\Models\Label;
 use App\Models\TodoList;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\LabelResource;
-use App\Http\Requests\LabelValidateRequest;
 
 class LabelController extends Controller
 {
-    public function index(TodoList $todo_list)
+    public function index(TodoList $todoList)
     {
-        $labels = $todo_list->labels();
+        $labels = $todoList->labels;
+
         return LabelResource::collection($labels);
     }
 
