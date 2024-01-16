@@ -23,10 +23,11 @@ test('user connect to a service and redirect', function () {
 
     $this->mock(Client::class, function (MockInterface $mock) {
         $mock->shouldReceive('setScopes')->once();
-        $mock->shouldReceive('createAuthUrl')->andReturn('http://localhost');
+        $mock->shouldReceive('createAuthUrl')
+            ->andReturn('http://localhost');
     });
 
-    $response = $this->getJson(route('webservice.connect', 'todolists'))->assertok();
+    $response = $this->getJson('api/todo-lists/webservice/connect/todolists')->assertok();
 
     $this->assertEquals($response['uri'], 'http://localhost');
 });
@@ -34,10 +35,11 @@ test('user connect to a service and redirect', function () {
 test('storing access token with service callback', function () {
 
     $this->mock(Client::class, function (MockInterface $mock) {
-        $mock->shouldReceive('fetchAccessTokenWithAuthCode')->andReturn(['access_token' => 'fake-token']);
+        $mock->shouldReceive('fetchAccessTokenWithAuthCode')
+            ->andReturn(['access_token' => 'fake-token']);
     });
 
-    $this->postJson(route('webservice.callback', $this->user->id), ['code' => 'dummyCode'])->assertCreated();
+    $this->postJson("api/todo-lists/webservice/callback/{$this->user->id}", ['code' => 'dummyCode'])->assertCreated();
 });
 
 test('storing a weekly data into google drive', function () {
@@ -53,5 +55,5 @@ test('storing a weekly data into google drive', function () {
     Task::factory()->create(['created_at' => now()->subDays(9)]);
     $webservice = WebService::factory()->create();
 
-    $this->postJson(route('webservice.store', $webservice->id))->assertCreated();
+    $this->postJson("api/todo-lists/webservice/{$webservice->id}")->assertCreated();
 });

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         $admin = BouncerFacade::role()->firstOrCreate([
             'name' => 'admin',
-            'title' => 'administration',
+            'title' => 'Admin',
         ]);
 
         foreach (config('abilities.abilities') as $ability) {

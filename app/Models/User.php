@@ -13,21 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasRolesAndAbilities, Notifiable;
 
-    public const ADMIN = 'admin';
-
-    public const VIEWER = 'viewer';
-
     protected $guarded = ['id'];
-
-    public function todolists()
-    {
-        return $this->belongsToMany(TodoList::class, 'user_todolist');
-    }
-
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'user_task');
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,4 +34,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public const ADMIN = 'admin';
+
+    public const VIEWER = 'viewer';
+
+    public function todolists()
+    {
+        return $this->belongsToMany(TodoList::class, 'user_todolist');
+    }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'user_task');
+    }
+
+    public function hasTodolist($todo_list_id)
+    {
+        $todolist = $this->todolists()->pluck('todo_list_id')->toArray();
+
+        return in_array($todo_list_id, $todolist);
+    }
 }
