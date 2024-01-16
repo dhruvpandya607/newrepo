@@ -17,11 +17,11 @@ beforeEach(function () {
     Sanctum::actingAs($user, ['*']);
 });
 
-test('fetching all tasks of todolist', function () {
+test('fetch all tasks', function () {
 
     $todolist = TodoList::find(1);
 
-    $this->getJson("api/todo-lists/{$todolist->id}/tasks")->assertOK();
+    $this->getJson("api/todo-lists/tasks/{$todolist->id}")->assertOK();
 });
 
 test('store a task with validation', function () {
@@ -29,7 +29,7 @@ test('store a task with validation', function () {
     $todolist = TodoList::find(1);
     $storeTask = Task::factory()->raw();
 
-    $this->postJson("api/todo-lists/{$todolist->id}/tasks", $storeTask)->json('data');
+    $this->postJson("api/todo-lists/tasks/{$todolist->id}", $storeTask)->json('data');
 
     $this->assertDatabaseHas('tasks', $storeTask);
 });
@@ -42,7 +42,7 @@ test('update a task with validation', function () {
         'status' => Task::STARTED,
     ];
 
-    $this->putJson("api/todo-lists/{$task->id}/tasks", $updateTask)->json('data');
+    $this->putJson("api/todo-lists/tasks/{$task->id}", $updateTask)->json('data');
 
     $this->assertDatabaseHas('tasks', $updateTask);
 });
@@ -51,7 +51,7 @@ test('delete a task', function () {
 
     $task = Task::factory()->create();
 
-    $this->deleteJson("api/todo-lists/{$task->id}/tasks");
+    $this->deleteJson("api/todo-lists/tasks/{$task->id}");
 
     $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
 });

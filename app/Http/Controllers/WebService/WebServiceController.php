@@ -26,7 +26,7 @@ class WebServiceController extends Controller
             $client->setScopes(self::TODOLISTS_SCOPES);
             $uri = $client->createAuthUrl();
 
-            return ['uri' => $uri];
+            return response()->json(['uri' => $uri]);
         }
     }
 

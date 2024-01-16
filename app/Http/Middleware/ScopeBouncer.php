@@ -33,7 +33,9 @@ class ScopeBouncer
         // Here you may use whatever mechanism you use in your app
         // to determine the current tenant. To demonstrate, the
         // $tenantId is set here from the user's account_id.
+
         $user = $request->user();
+
         $tenantId =
             $request->header('todolist') ? $request->header('todolist') : $user->todolists()->first()->id;
 

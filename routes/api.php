@@ -8,44 +8,41 @@ use App\Http\Controllers\TodoList\TodoListController;
 use App\Http\Controllers\WebService\WebServiceController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'todolists'])->group(function () {
 
     Route::middleware(['bouncer'])->group(function () {
 
         // Todo-lists
-        Route::get('todo-lists', [TodoListController::class, 'index'])->name('todo-lists.index');
-        Route::post('todo-lists', [TodoListController::class, 'store'])->name('todo-lists.store');
-        Route::get('todo-lists/{todoList:id}', [TodoListController::class, 'show'])->name('todo-lists.show');
-        Route::put('todo-lists/{todoList}', [TodoListController::class, 'update'])->name('todo-lists.update');
-        Route::delete('todo-lists/{todoList}', [TodoListController::class, 'destroy'])->name('todo-lists.destroy');
+        Route::apiResource('todo-lists', TodoListController::class);
 
-        // Tasks
-        Route::get('todo-lists/{todoList:id}/tasks', [TaskController::class, 'index']);
-        Route::post('todo-lists/{todoList:id}/tasks', [TaskController::class, 'store']);
-        Route::put('todo-lists/{task}/tasks', [TaskController::class, 'update']);
-        Route::delete('todo-lists/{task}/tasks', [TaskController::class, 'destroy']);
+        Route::prefix('todo-lists')->group(function () {
 
-        // Label
-        Route::get('todo-lists/tasks/{todoList:id}/label', [LabelController::class, 'index']);
-        Route::post('todo-lists/tasks/{todoList:id}/label', [LabelController::class, 'store']);
-        Route::put('todo-lists/tasks/{label}/label', [LabelController::class, 'update']);
-        Route::delete('todo-lists/tasks/{label}/label', [LabelController::class, 'destroy']);
+            // Tasks
+            Route::get('tasks/{todoList:id}', [TaskController::class, 'index']);
+            Route::post('tasks/{todoList:id}', [TaskController::class, 'store']);
+            Route::put('tasks/{task}', [TaskController::class, 'update']);
+            Route::delete('tasks/{task}', [TaskController::class, 'destroy']);
 
-        // google-drive-api todolists services
-        Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect'])->name('webservice.connect');
-        Route::post('webservice/callback', [WebServiceController::class, 'callback'])->name('webservice.callback');
-        Route::post('webservice/{webservice}', [WebServiceController::class, 'store'])->name('webservice.store');
+            // Label
+            Route::get('tasks/{todoList:id}/label', [LabelController::class, 'index']);
+            Route::post('tasks/{todoList:id}/label', [LabelController::class, 'store']);
+            Route::put('tasks/{label}/label', [LabelController::class, 'update']);
+            Route::delete('tasks/{label}/label', [LabelController::class, 'destroy']);
+
+            // google-drive-api todolists services
+            Route::get('webservice/connect/{name}', [WebServiceController::class, 'connect']);
+            Route::post('webservice/callback/{id}', [WebServiceController::class, 'callback']);
+            Route::post('webservice/{webservice:id}', [WebServiceController::class, 'store']);
+        });
+
     });
 });
 
 // Register
-Route::get('register', [RegisterController::class, 'create'])
-    ->name('register');
-Route::post('register', [RegisterController::class, 'store'])
-    ->name('user.register');
+Route::get('/register', [RegisterController::class, 'create']);
+Route::post('/register', [RegisterController::class, 'store']);
 
 // Login
-Route::get('login', [LoginController::class, 'create'])
-    ->name('login');
-Route::post('login', [LoginController::class, 'store'])
-    ->name('user.login');
+Route::get('login', [LoginController::class, 'create'])->name('login');
+Route::post('/login', [LoginController::class, 'store']);
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');

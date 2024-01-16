@@ -17,14 +17,14 @@ beforeEach(function () {
     Sanctum::actingAs($user, ['*']);
 });
 
-test('fetching all labels', function () {
+test('fetch all labels', function () {
 
     $todolist = TodoList::find(1);
 
     $this->getJson("api/todo-lists/tasks/{$todolist->id}/label")->assertOk();
 });
 
-test('storing a label with validation', function () {
+test('store label with validation', function () {
 
     $todolist = TodoList::find(1);
     $label = Label::factory()->raw();
@@ -34,7 +34,7 @@ test('storing a label with validation', function () {
     $this->assertDatabaseHas('labels', $label);
 });
 
-test('updating a label with validation', function () {
+test('update label with validation', function () {
 
     $label = Label::factory()->create();
     $updateLabel = [
@@ -47,11 +47,16 @@ test('updating a label with validation', function () {
     $this->assertDatabaseHas('labels', $updateLabel);
 });
 
-test('user can delete a label of task', function () {
+test('delete a label', function () {
 
     $label = Label::factory()->create();
 
     $this->delete("api/todo-lists/tasks/{$label->id}/label");
 
-    $this->assertDatabaseMissing('labels', ['id' => $label->id]);
+    $this->assertDatabaseMissing('labels', [
+        'id' => $label->id,
+        'name' => $label->name,
+        'color' => $label->color,
+
+    ]);
 });
