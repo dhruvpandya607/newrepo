@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Task;
-use App\Models\TodoList;
 use Illuminate\Support\Facades\Artisan;
 
 uses(
@@ -9,13 +8,21 @@ uses(
     Illuminate\Foundation\Testing\RefreshDatabase::class,
 );
 
-test('task belongs to todo list', function () {
+beforeEach(function () {
 
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
+});
 
-    $this->withoutExceptionHandling();
+test('task belongs to todo list', function () {
 
     $task = Task::factory()->forTodolists()->create();
 
     $this->assertTrue($task->todolists()->exists());
+});
+
+test('task belongs to many users', function () {
+
+    $task = Task::factory()->hasUsers(3)->create();
+
+    $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $task->users);
 });

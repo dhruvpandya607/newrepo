@@ -12,7 +12,9 @@ class LabelResource extends JsonResource
         return [
             'name' => $this->name,
             'color' => $this->color,
-            'todolist' => $this->todolists->name,
+            'todolist' => $this->when($this->todolists()->exists(), function () {
+                return new TodoListResource($this->todolist);
+            }),
         ];
     }
 }

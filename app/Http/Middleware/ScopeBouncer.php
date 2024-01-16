@@ -36,7 +36,7 @@ class ScopeBouncer
         $user = $request->user();
         $tenantId =
             $request->header('todolist') ? $request->header('todolist') : $user->todolists()->first()->id;
-        
+
         $this->bouncer->scope()->to($tenantId);
 
         return $next($request);

@@ -12,7 +12,9 @@ class TaskResource extends JsonResource
         return [
             'title' => $this->title,
             'status' => $this->status,
-            'todolist' => $this->todolists->name,
+            'todolist' => $this->when($this->todolists()->exists(), function () {
+                return new TodoListResource($this->todolist);
+            }),
             'created_at' => $this->created_at->diffForHumans(),
         ];
     }

@@ -29,8 +29,6 @@ class TodoList extends Model
     public static function createTodolist($request)
     {
         $data = $request->validated();
-        $data['user_id'] = auth()->id();
-
         $todo_list = self::create($data);
 
         return $todo_list;

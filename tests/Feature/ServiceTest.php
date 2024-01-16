@@ -13,9 +13,10 @@ beforeEach(function () {
     Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
 
     $this->user = User::find(1);
+    $this->withHeaders([
+        'todolist' => $this->user->todolists()->first()->id,
+    ]);
     Sanctum::actingAs($this->user, ['*']);
-
-    $this->withoutExceptionHandling();
 });
 
 test('user connect to a service and redirect', function () {

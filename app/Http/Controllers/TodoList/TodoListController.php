@@ -27,27 +27,27 @@ class TodoListController extends Controller
         return new TodoListResource($todo_list);
     }
 
-    public function update(TodoListValidateRequest $request, TodoList $todo_list)
+    public function update(TodoListValidateRequest $request, TodoList $todoList)
     {
-        $this->authorize('update', $todo_list);
+        $this->authorize('update', $todoList);
 
-        $todo_list->update($request->validated());
+        $todoList->update($request->validated());
 
-        return new TodoListResource($todo_list);
+        return new TodoListResource($todoList);
     }
 
-    public function show(TodoList $todo_list)
+    public function show(TodoList $todoList)
     {
-        $this->authorize('view', $todo_list);
+        $this->authorize('view', $todoList);
 
-        return new TodoListResource($todo_list);
+        return new TodoListResource($todoList);
     }
 
-    public function destroy(TodoList $todo_list)
+    public function destroy(TodoList $todoList)
     {
-        $this->authorize('delete', $todo_list);
+        $this->authorize('delete', $todoList);
 
-        $todo_list->delete();
+        $todoList->delete();
 
         return response()->json([
             'success' => true,

@@ -12,6 +12,9 @@ class TodoListResource extends JsonResource
         return [
             'name' => $this->name,
             'created_at' => $this->created_at->diffForHumans(),
+            'label' => $this->when($this->labels()->exists(), function () {
+                return new LabelResource($this->label);
+            }),
         ];
     }
 }

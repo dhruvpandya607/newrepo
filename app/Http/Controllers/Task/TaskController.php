@@ -10,9 +10,9 @@ use App\Models\TodoList;
 
 class TaskController extends Controller
 {
-    public function index(TodoList $todolist)
+    public function index(TodoList $todoList)
     {
-        $tasks = $todolist->task;
+        $tasks = $todoList->tasks;
 
         return TaskResource::collection($tasks);
     }

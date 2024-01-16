@@ -24,6 +24,11 @@ class User extends Authenticatable
         return $this->belongsToMany(TodoList::class, 'user_todolist');
     }
 
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'user_task');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
