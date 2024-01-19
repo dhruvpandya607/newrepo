@@ -2,12 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Task\TaskController;
+use App\Http\Controllers\Admin\TodoList\TodoListController;
+use App\Http\Controllers\Viewer\TodoList\TodoListController as ViewerTodoListController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Label\LabelController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\WebService\WebServiceController;
-use App\Http\Controllers\Admin\TodoList\TodoListController;
-
 
 Route::middleware(['auth:sanctum', 'todolists'])->group(function () {
 
@@ -37,6 +37,9 @@ Route::middleware(['auth:sanctum', 'todolists'])->group(function () {
         });
     });
 });
+
+Route::get('todo-lists', [ViewerTodoListController::class, 'index']);
+Route::get('todo-lists/{todolist:id}', [ViewerTodoListController::class, 'show']);
 
 // Register
 Route::get('/register', [RegisterController::class, 'create']);
