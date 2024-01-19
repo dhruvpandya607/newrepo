@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\TodoList\TodoListController;
+use App\Http\Controllers\Admin\TodoList\TodoListController;
 use App\Http\Requests\TodoListValidateRequest;
 use App\Models\TodoList;
 use App\Models\User;
