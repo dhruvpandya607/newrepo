@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Label;
+namespace App\Http\Controllers\Admin\Label;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LabelValidateRequest;

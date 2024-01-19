@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Task;
+namespace App\Http\Controllers\Admin\Task;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskValidateRequest;

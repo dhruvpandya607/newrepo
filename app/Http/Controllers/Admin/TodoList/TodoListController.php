@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\TodoList;
+namespace App\Http\Controllers\Admin\TodoList;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TodoListValidateRequest;
