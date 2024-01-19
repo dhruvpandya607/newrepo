@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WebService;
+namespace App\Http\Controllers\Admin\WebService;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;

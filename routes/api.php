@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\Task\TaskController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Label\LabelController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
-use App\Http\Controllers\WebService\WebServiceController;
+use App\Http\Controllers\Admin\WebService\WebServiceController;
 use App\Http\Controllers\Admin\TodoList\TodoListController;
 
 
